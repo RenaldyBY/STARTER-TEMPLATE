@@ -14,12 +14,21 @@
             {{ __('pengelolaan Buku')}}
         </div>
         <div class="card-body">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal">
-                    <i class="fa da-plus"></i>Restore All
-                </button>
-                 <a href="{{route('admin.print.books')}}" target="blank" class="btn btn-secondary"><i class="fa fa-trash">Dellet All</i></a>
-
-            <hr/>
+            <div class="btn btn-group">
+                <form id="form-restore-all" action="{{route('admin.restore.all')}}" method="post">
+                    @csrf
+                    <button type="button" id="btn-restore-all" class="btn btn-primary">
+                        Restore All <i class="fa fa-plus"></i>
+                    </button>
+                </form>
+                <form id="form-delete-all" action="{{route('admin.empty')}}" method="post">
+                    @csrf
+                    @method('delete')
+                    <button id="btn-delete-all" class="btn btn-danger" type="submit">Hapus Semua <i
+                            class="fa fa-recycle"></i> </button>
+                </form>
+            </div>
+            <hr />
             <table id="my-table" class="table table-bordered">
                 <thead>
                     <tr class="text-center">
@@ -35,7 +44,7 @@
                 <tbody>
                     @php $no=1; @endphp
                     @foreach($books as $book)
-                    <tr>
+                    <tr class="text-center">
                         <td>{{$no++}}</td>
                         <td>{{$book->judul}}</td>
                         <td>{{$book->penulis}}</td>
@@ -48,12 +57,21 @@
                             @endif
                         </td>
                         <td>
-                            <div class="btn-grup" role="group" aria-label="Basic example">
-                                <button type="button" id="btn-edit-buku" class="btn btn-success" data-toggle="modal"
-                                data-target="#editBukuModal" data-id="{{$book->id}}">Restore</button>
-                                <button type="button" id="btn-delete-buku" class="btn btn-danger" onclick="hapus('{{$book->id}}','{{$book->judul}}')">Dellet Permanet</button>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <form id="restore" action="/trash/restore/{{$book->id}}" method="post">
+                                    @csrf
+                                    <button type="button" id="btn-restore" class="btn btn-success">Kembalikan
+                                        Data</button>
+                                </form>
+                                <form id="delete" action="/trash/destroy/{{$book->id}}" method="post">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="button" id="btn-delete" class="btn btn-danger">Hapus
+                                        Permanen</button>
+                                </form>
                             </div>
                         </td>
+                    
                     </tr>    
                     @endforeach
                 </tbody>
@@ -64,3 +82,78 @@
     </div>
 </div>
 @stop
+@section('adminlte_js')
+<script>
+    $(function () {
+        $(document).on('click', '#btn-delete', function () {
+            var form = event.target.form;
+            Swal.fire({
+                title: 'Apa kamu yakin?',
+                text: "Kamu tidak akan dapat mengembalikan ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            })
+        });
+        $(document).on('click', '#btn-restore-all', function () {
+            var x = $('#form-restore-all');
+            event.preventDefault();
+            Swal.fire({
+                title: 'Apa kamu yakin?',
+                text: "Ingin Mengembalikan Semua Data Yang Ada Di Recycle Bin?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Kembalikan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    x.submit();
+                }
+            })
+        });
+        $(document).on('click', '#btn-restore', function () {
+            var form = event.target.form;
+            Swal.fire({
+                title: 'Apa kamu yakin?',
+                text: "Ingin Mengembalikan Data Buku Ini?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Kembalikan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#restore').submit();
+                }
+            })
+        });
+        $(document).on('click', '#btn-delete-all', function () {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Apa kamu yakin?',
+                html: "Ingin Mengosongkan Recycle Bin? <br> <strong>Data Tidak Dapat Dikembalikan!</strong>",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#form-delete-all').submit();
+                }
+            })
+        });
+    });
+</script>
+@endsection

@@ -139,7 +139,7 @@ class AdminController extends Controller
     public function delete_book($id){
         $book = Book::find($id);
 
-        storage::delete('public/cover_buku/'.$book->cover);
+        // Storage::delete('public/cover_buku/'.$book->cover);
 
         $book->delete();
 

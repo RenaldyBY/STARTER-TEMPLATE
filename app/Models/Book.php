@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Book extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
     protected $guarded = [];
     
     public static function getDataBooks(){

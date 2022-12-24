@@ -228,7 +228,7 @@
     function hapus(npm, judul){
         Swal.fire({
             title: "Hapus?",
-            type: 'warning',
+            icon: 'warning',
             text: "apakah anda yakin akan menghapus data buku dengan judul" + judul +"?!",
             showCancelButton: !0,
             confirButtonText: "Ya, lakukan!",
