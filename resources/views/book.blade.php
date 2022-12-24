@@ -124,13 +124,11 @@
             <div class="modal-body">
                 <form method="post" action="{{route('admin.book.import')}}" enctype="multipart/form-data">
                 @csrf
-                @method('PATCH')
                         <div class="form-grup">
                             <label for="cover">Judul Buku</label>
                             <input type="file" class="form-control" name="file"/>
                         </div>
                     </div>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-diss="modal">Batal</button>
                     <button type="submit" class="btn btn-success">Import Data</button>
@@ -139,7 +137,7 @@
             </div>
         </div>
     </div>
-</div>
+
 
 <div class="modal fade" id="editBukuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

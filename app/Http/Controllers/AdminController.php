@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use App\Import\BooksImport;
+use App\Imports\BooksImport;
 use App\Models\Book;
-use Matwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BooksExport;
 use PDF;
 
 class AdminController extends Controller
 {
-    public function import(Reques $req)
+    public function import(Request $req)
     {
         Excel::import(new BooksImport, $req->file('file'));
         

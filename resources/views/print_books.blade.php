@@ -30,7 +30,7 @@
                 <td>{{ $book->judul }}</td>
                 <td>{{ $book->penulis }}</td>
                 <td>{{ $book->tahun }}</td>
-                <td>{{ $boo->penerbit }}</td>
+                <td>{{ $book->penerbit }}</td>
                 <td>
                     @if($book->cover !== null)
                     <img src="{{public_path('storage/cover_buku/'.$book->cover)}}" width="80px"/>
