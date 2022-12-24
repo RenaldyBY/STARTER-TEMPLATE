@@ -29,6 +29,8 @@ Route::get('admin/home' , [App\Http\Controllers\AdminController::class, 'index']
 Route::get('admin/books', [App\Http\Controllers\AdminController::class, 'books'])
     ->name('admin.books')
     ->middleware('is_admin');
+    Route::get('/admin/ajaxadmin/dataBuku/{id}', [App\Http\Controllers\AdminController::class, 'getDataBuku'])
+    ->middleware('is_admin');
 
 //PENGELOLAAN BUKU
 Route::post('admin/books',[App\Http\controllers\AdminController::class, 'submit_book'])
@@ -46,3 +48,9 @@ Route::post('admin/books/delete/{id}', [App\Http\Controllers\AdminController::cl
 Route::get('admin/print_books',[App\Http\Controllers\AdminController::class, 'print_books'])
     ->name('admin.print.books')
     ->middleware('is_admin');
+
+Route::get('admin/books/export', [App\Http\Controllers\AdminController::class, 'export'])
+    ->name('admin.book.export')->middleware('is_admin');
+
+Route::post('admin/books/import', [App\Http\Controllers\AdminController::class, 'import'])
+    ->name('admin.book.import')->middleware('is_admin');

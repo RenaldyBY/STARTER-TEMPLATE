@@ -6,11 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use App\Import\BooksImport;
 use App\Models\Book;
+use Matwebsite\Excel\Facades\Excel;
+use App\Exports\BooksExport;
 use PDF;
 
 class AdminController extends Controller
 {
+    public function import(Reques $req)
+    {
+        Excel::import(new BooksImport, $req->file('file'));
+        
+        $notification = array(
+            'message' => 'Import data Berhasil dilakukan',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('admin.books')->with($notification);
+    }
+    public function export()
+    {
+        return Excel::download(new BooksExport, 'books.xlsx');
+    }
     public function print_books()
     {
         $books = Book::all();
@@ -99,7 +117,7 @@ class AdminController extends Controller
 
             $filename = 'cover_buku'.time().'.'.$extension;
 
-            $$req->file('cover')->storeAs(
+            $req->file('cover')->storeAs(
                 'public/cover_buku', $filename
             );
             
@@ -123,12 +141,12 @@ class AdminController extends Controller
 
         storage::delete('public/cover_buku/'.$book->cover);
 
-        books->delete();
+        $book->delete();
 
         $success = true;
         $message = "Data buku berhasul dihapus";
 
-        return reponse()->json([
+        return response()->json([
                 'success' => $success,
                 'message' => $message,
         ]);

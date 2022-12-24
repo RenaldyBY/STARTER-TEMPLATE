@@ -14,6 +14,17 @@
             {{ __('pengelolaan Buku')}}
         </div>
         <div class="card-body">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal">
+                    <i class="fa da-plus"></i>Tambah Data 
+                </button>
+                 <a href="{{route('admin.print.books')}}" target="blank" class="btn btn-secondary"><i class="fa fa-print">Cetak PDF</i></a>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <a href="{{route('admin.book.export')}}" class="btn btn-info" target="_blank">Export</a>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#importExcell">
+                    <i class="fa da-file-excel"></i>Import 
+                </button>
+            </div>
+            <hr/>
             <table id="my-table" class="table table-bordered">
                 <thead>
                     <tr class="text-center">
@@ -45,20 +56,13 @@
                             <div class="btn-grup" role="group" aria-label="Basic example">
                                 <button type="button" id="btn-edit-buku" class="btn btn-success" data-toggle="modal"
                                 data-target="#editBukuModal" data-id="{{$book->id}}">Edit</button>
-                                <button type="button" id="btn-delete-buku" class="btn btn-danger" onclick="deleteConfirmation('{{$book->id}}','{{$book->jdudul}}')">Hapus</button>
+                                <button type="button" id="btn-delete-buku" class="btn btn-danger" onclick="hapus('{{$book->id}}','{{$book->judul}}')">Hapus</button>
                             </div>
                         </td>
                     </tr>    
                     @endforeach
                 </tbody>
                 
-                <div class="card-body">
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal">
-                        <i class="fa da-plus"></i>Tambah Data 
-                    </button>
-                     <a href="{{route('admin.print.books')}}" target="blank" class="btn btn-secondary"><i class="fa fa-print">Cetak PDF</i></a>
-                    <table id="table-data" class="table table-bordere"></table>
-                </div>
 
             </table>
         </div>
@@ -72,6 +76,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+            </div>
                 <div class="modal-body">
                     <form method="post" action="{{route('admin.book.submit')}}" enctype="multipart/form-data">
                     @csrf
@@ -93,19 +98,50 @@
                     </div>
                     <div class="form-grup">
                         <label for="cover">Cover</label>
-                        <input type="file" class="form-control" name="cover" id="cover" required>
+                        <input type="file" class="form-control" name="cover" id="cover">
                     </div>
+                
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismis="modal">Tutup</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary">Kirim</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="editbukuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="importExcell" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{{route('admin.book.import')}}" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
+                        <div class="form-grup">
+                            <label for="cover">Judul Buku</label>
+                            <input type="file" class="form-control" name="file"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-diss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Import Data</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editBukuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -136,11 +172,12 @@
                             <label for="edit-judul">Penerbit</label>
                             <input type="text" class="form-control" name="penerbit" id="edit-penerbit" required/>
                         </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-grup" id="image-area"></div>
                             <div class="form-grup">
                                 <label for="edit-cover">Cover</label>
-                                <input type="file" class="form-control" name="cover" id="edit-cover" required/>
+                                <input type="file" class="form-control" name="cover" id="edit-cover"/>
                             </div>
                         </div>
                     </div>
@@ -149,7 +186,7 @@
                     <input type="hidden" name="id" id="edit-id"/>
                     <input type="hidden" name="old_cover" id="edit-old-cover"/>
 
-                    <button type="button" class="btn btn-secondary" data-diss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-success">Update</button>
                 </div>
             </form>
@@ -162,25 +199,25 @@
 <script>
     $(function(){
 
-        $(dokument).on('click', '#btn-edit-buku', function(){
+        $(document).on('click', '#btn-edit-buku', function(){
             let id = $(this).data('id');
 
-            $('#image-ara').empty();
+            $('#image-area').empty();
 
             $.ajax({
                 type : "get",
                 url : "{{url('/admin/ajaxadmin/dataBuku')}}/"+id,
                 dataType :'json',
-                success; function(res){
+                success: function(res){
                     $('#edit-judul').val(res.judul);
                     $('#edit-penerbit').val(res.penerbit);
                     $('#edit-penulis').val(res.penulis);
                     $('#edit-tahun').val(res.tahun);
                     $('#edit-id').val(res.id);
-                    $('#edit-cover').val(res.cover);
+                    $('#edit-old-cover').val(res.cover);
                     
                     if(res.cover !== null){
-                        $('#image-area').append("<img src='"+baseurl+"/storage/cover_buku/"+res.cover+"' width='200px'/>");
+                        $('#image-area').append(`<img src="/storage/cover_buku/`+res.cover+`" width="200px"/>`);
 
                     }else{
                         $('#image-area').append('[Gambar tidak tersedia]');
@@ -190,17 +227,16 @@
         });
     });
 
-    function deleteConfirmation(npm, judul){
-        swal.fire({
+    function hapus(npm, judul){
+        Swal.fire({
             title: "Hapus?",
             type: 'warning',
-            text: "apakah anda yakin akan menghapus data buku dengan judul" + judul+"?!",
-;
+            text: "apakah anda yakin akan menghapus data buku dengan judul" + judul +"?!",
             showCancelButton: !0,
             confirButtonText: "Ya, lakukan!",
             cancelButtonText: "tidak, batalkan",
             reveseButtons: !0
-        }).then(function (e)){
+        }).then(function (e){
             if (e.value === true ){
                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                     $.ajax({
@@ -212,7 +248,7 @@
                             if(results.success === true){
                                 swal.fire("Done!", results.message, "succes");
                                 // refresh page after 2 seconds
-                                setTimeout(function{
+                                setTimeout(function(){
                                     location.reload();
                                 },1000);
                             }else{
