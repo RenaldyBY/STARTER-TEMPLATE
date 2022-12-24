@@ -290,6 +290,12 @@ return [
     */
 
     'menu' => [
+        [
+            'text' => 'Buku',
+            'url' => 'admin/books',
+            'icon' => 'fas fa-fw fa-book',
+            'can' => 'isAdmin',
+        ],
         // Navbar items:
         'MAIN NAVIGATION',
         [
@@ -305,18 +311,6 @@ return [
         ],
         [
             'header' => 'ACCOUNT SETTINGS',
-        ],
-        [
-            'text' => 'Profile',
-            'route' => 'admin.profile',
-            'icon' => 'fas fa-fw fa-user',
-            'can' => 'isAdmin',
-        ],
-        [
-            'text' => 'Chage Password',
-            'route' => 'admin.password',
-            'icon' => 'fa fa-fw fa-user',
-            'can' => 'isAdmin',
         ],
         
         [
