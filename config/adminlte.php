@@ -296,6 +296,12 @@ return [
             'icon' => 'fas fa-fw fa-book',
             'can' => 'isAdmin',
         ],
+        [
+            'text' => 'Recycle',
+            'url' => 'admin/trash',
+            'icon' => 'fas fa-fw fa-trash',
+            'can' => 'isAdmin',
+        ],
         // Navbar items:
         'MAIN NAVIGATION',
         [

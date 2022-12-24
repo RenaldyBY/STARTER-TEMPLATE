@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Book;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +15,15 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function ($book) {
+//     $book = Book::all();
+//     return view('index', compact('book'));
+// });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'landing'])->name('index');
 
 Route::get('admin/home' , [App\Http\Controllers\AdminController::class, 'index'])
     ->name('admin.home')
@@ -54,3 +57,7 @@ Route::get('admin/books/export', [App\Http\Controllers\AdminController::class, '
 
 Route::post('admin/books/import', [App\Http\Controllers\AdminController::class, 'import'])
     ->name('admin.book.import')->middleware('is_admin');
+
+Route::get('admin/trash' , [App\Http\Controllers\trashController::class, 'index'])
+    ->name('admin.trash')
+    ->middleware('is_admin');

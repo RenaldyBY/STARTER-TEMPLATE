@@ -123,7 +123,7 @@
             </div>
             <div class="modal-body">
                 <form method="post" action="{{route('admin.book.import')}}" enctype="multipart/form-data">
-                @csrf
+                @csrfco
                         <div class="form-grup">
                             <label for="cover">Judul Buku</label>
                             <input type="file" class="form-control" name="file"/>
